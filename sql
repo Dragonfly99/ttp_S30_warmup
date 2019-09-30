@@ -55,3 +55,59 @@ WHERE customer_id = (SELECT customer_id
 					  FROM payment
 					  ORDER BY payment_date
 					 LIMIT 1);
+                     
+                     
+                     
+                     
+                     
+--Question 1
+WITH avg_stock AS(
+SELECT COUNT(inventory_id) AS stock
+FROM inventory 
+GROUP BY store_id 
+)
+SELECT AVG(stock)
+FROM avg_stock;
+
+--Question 2
+WITH LTV AS(
+SELECT staff_id, SUM(amount) as total
+FROM payment
+GROUP BY customer_id, staff_id 
+)
+SELECT staff_id, AVG(total)
+FROM LTV
+GROUP BY LTV.staff_id;
+
+
+--Question 3
+WITH  avg_rental_rate AS(
+SELECT AVG(rental_rate) AS avg_rate
+FROM film
+INNER JOIN film_category
+USING (film_id)
+GROUP BY  category_id
+)
+SELECT avg_rate
+FROM avg_rental_rate;
+
+--Question 4
+WITH biggest_category AS(
+SELECT title, rating
+FROM film
+GROUP BY title, rating
+ORDER BY COUNT(*) Desc 
+)
+SELECT title, rating
+FROM biggest_category
+WHERE rating = 'PG-13';
+
+--Question 5
+WITH early_customer AS
+(SELECT *
+FROM payment
+ORDER BY customer_id)
+SELECT *
+FROM early_customer
+WHERE customer_id = 416;
+
